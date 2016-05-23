@@ -1,8 +1,48 @@
-var devMocks = require('./device');
-var controller = {};
+var MockDevice = require('./device');
+var chance = require('chance');
+var controller = {
+    devEmitter: null
+};
+
+controller.startEmitNewDev = function () {
+    var self = this,
+        dev = new MockDevice(),
+        randomDuration = chance.integer({ min: 500, max: 5000 });
+
+    controller.devEmitter = setTimeout(function () {
+        self.emit('DEV_INCOMING', dev);
+        self.startEmitNewDev();
+    }, randomDuration);
+};
+
+controller.stopEmitNewDev = function () {
+    if (controller.devEmitter)
+        clearTimeout(controller.devEmitter);
+};
 
 controller.start = function (cb) {
     cb(null, true);
+
+    // start emit
+
+    // controller.on('DEV_INCOMING', function (dev) {
+    //     nc.commitDevIncoming();
+
+    //     nc.commitGadIncoming();
+    // });
+
+    // controller.on('DEV_LEAVING', function (permAddr) {
+    //     nc.commitDevLeaving();
+    // });
+
+    // controller.on('DEV_REPORTING', function (permAddr) {
+    //     nc.commitDevReporting();
+    // });
+
+    // controller.on('GAD_REPORTING', function (permAddr) {
+    //     nc.commitDevReporting();
+    // });
+
 };
 
 controller.stop = function (cb) {
@@ -36,8 +76,6 @@ controller.ping = function (permAddr, cb) {
 controller.devRead = function (permAddr, attr, cb) {
     cb(null, 10);
 };
-
-
 
 var devDrivers = {
     read: null,         // function(permAddr, attr, callback) {},       callback(err, result), result: value read (Type denpends, ex: 'hello', 12, false)

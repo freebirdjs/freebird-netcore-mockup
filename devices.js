@@ -1,20 +1,9 @@
 var chance = require('chance'),
     lwm2mId = require('lwm2m-id');
 
-var oids = [ 3200, 3201, 3203, 3300, 3301, 3302, 3303, 3304, 3305, 3306, 
-             3308, 3310, 3311, 3312, 3313, 3314, 3315 ];
-
-function getSmallInterger() {
-    return chance.integer({ min: 0, max: 10 });
-}
-
-function randomVersion() {
-    var major = getSmallInterger(),
-        minor = getSmallInterger(),
-        patch = getSmallInterger();
-
-    return major + '.' + minor + '.' + patch;
-}
+var oids = [ 3200, 3201, 3203, 3300, 3301, 3302, 3303, 3304, 
+             3305, 3306, 3308, 3310, 3311, 3312, 3313, 3314,
+             3315 ];
 
 function Device() {
     this.clientId = chance.hash({ length: 8 });
@@ -24,10 +13,10 @@ function Device() {
     this.mac = chance.mac_address();
     this.version = randomVersion();
     this.objList = {
-        "1":[0],
-        "3":[0],
-        "4":[0],
-        "3300":[0,1]
+        1: [ 0 ],
+        3: [ 0 ],
+        4: [ 0 ],
+        3300: [ 0, 1 ]
     };
 
     this.so = {
@@ -42,20 +31,20 @@ function Device() {
         },
         device:{
             0: {
-                "manuf": chance.word(),
-                "model": chance.word(),
-                "reboot": "_unreadable_",
-                "availPwrSrc": 0,
-                "pwrSrcVoltage": 5,
-                "devType": chance.word(),
-                "hwVer": randomVersion(),
-                "swVer": randomVersion()
+                manuf: chance.word(),
+                model: chance.word(),
+                reboot: "_unreadable_",
+                availPwrSrc: 0,
+                pwrSrcVoltage: 5,
+                devType: chance.word(),
+                hwVer: randomVersion(),
+                swVer: randomVersion()
             }
         },
         connMonitor: {
             0: {
                 ip: this.ip,
-                "routeIp": ""
+                routeIp: ""
             }
         },
     };
@@ -63,7 +52,6 @@ function Device() {
 
 function getSmartObject(oid) {
     var oItem = lwm2mId.getOid(oid);
-
     // var defs = lwm2mId.getRdef(oItem.key, );
     var specificResrcChar = lwm2mId.SpecificResrcChar[oItem.key],
         rscKeys = Object.keys(specificResrcChar),
@@ -78,26 +66,45 @@ function getSmartObject(oid) {
     });
 }
 
+function getSmallInterger() {
+    return chance.integer({ min: 0, max: 10 });
+}
+
 function getRandomByType(type) {
+    var data;
     switch (type) {
         case 'string': 
+            data = chance.string({ length: getSmallInterger() });
             break;
         case 'boolean': 
+            data = chance.bool();
             break;
         case 'integer': 
+            data = chance.integer({ min: 0, max: 255 });
             break;
         case 'execute': 
+            data = '_exec_';
             break;
         case 'time': 
+            data = chance.timestamp();
             break;
         case 'float': 
+            data = chance.float({ min: 0, max: 254, fixed: 2 });
             break;
         default:
             break;
-
     }
 }
 
+function randomVersion() {
+    var major = getSmallInterger(),
+        minor = getSmallInterger(),
+        patch = getSmallInterger();
+
+    return major + '.' + minor + '.' + patch;
+}
+
+module.exports = Device;
 
 // {
 //     "clientId":"khh-port-power-mon-01",
