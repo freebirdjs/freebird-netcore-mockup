@@ -15,5 +15,12 @@
   "bugs": {
     "url": "https://github.com/freebirdjs/freebird-netcore-mockup/issues"
   },
-  "homepage": "https://github.com/freebirdjs/freebird-netcore-mockup#readme"
+  "homepage": "https://github.com/freebirdjs/freebird-netcore-mockup#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chance": "^1.0.3"
+  },
+  "dependencies": {
+    "lwm2m-id": "^1.2.6"
+  }
 }
