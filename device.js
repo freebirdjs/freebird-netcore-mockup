@@ -22,7 +22,7 @@ var oids = [ 3200, 3201, 3203, 3300, 3301, 3302, 3303, 3304,
 
 // console.log(generateSmartObject('presence'));
 
-console.log(util.inspect(new Device(), { depth: null }));
+//console.log(util.inspect(new Device(), { depth: null }));
 
 function generateSmartObject(oid) {
     var oidStr = lwm2mId.getOid(oid).key;
@@ -125,9 +125,9 @@ function Device() {
 
     pickedObjectIds.forEach(function (oid) {
         var so = generateSmartObject(oid);
-        console.log('xxx');
-        console.log(oid);
-        console.log(so);
+        // console.log('xxx');
+        // console.log(oid);
+        // console.log(so);
         Object.assign(self.so, so);
     });
 
