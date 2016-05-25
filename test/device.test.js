@@ -137,7 +137,3 @@ describe('Device Contructor', function() {
         });
     });
 });
-
-describe('Device Contructor', function() {
-    var dev = new Device();
-});
