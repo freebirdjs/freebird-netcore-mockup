@@ -1,0 +1,94 @@
+
+// raw
+Device {
+  clientId: 'add09003',
+  lifetime: 84952,
+  joinTime: 1442206294,
+  ip: '67.61.234.211',
+  mac: '50:8E:22:13:5F:82',
+  version: '8.10.10',
+  objList: 
+   { '1': [ 0 ],
+     '3': [ 0 ],
+     '4': [ 0 ],
+     '3300': [ 0, 1 ],
+     '3314': [ 5702, 5703, 5701, 5705 ] },
+  so: 
+   { lwm2mServer: 
+      { '0': 
+         { shortServerId: null,
+           lifetime: 84952,
+           defaultMinPeriod: 1,
+           defaultMaxPeriod: 60,
+           regUpdateTrigger: '_unreadable_' } },
+     device: 
+      { '0': 
+         { manuf: 'rebol',
+           model: 'tur',
+           reboot: '_unreadable_',
+           availPwrSrc: 0,
+           pwrSrcVoltage: 5,
+           devType: 'maw',
+           hwVer: '6.3.6',
+           swVer: '6.3.9' } },
+     connMonitor: { '0': { ip: '67.61.234.211', routeIp: '' } },
+     magnetometer: 
+      { '0': 
+         { xValue: 240.61,
+           yValue: 76.63,
+           units: 'F0(^#',
+           compassDir: 65.8 } } } }
+
+// cooked
+function Device(netcore, rawDev) {
+    if (!_.isObject(netcore) || !netcore._controller)
+        throw new Error('netcore should be given when new Device()');
+
+    this._netcore = netcore;
+    this._raw = rawDev;         // optional
+    this._id = null;            // register@fb
+    this._gads = [];            // when register gad @fb, { gadId: null, auxId: auxId }
+    this._removing = false;     // devLeaving helper, tag if it is removed by remove()
+
+    this._net = {
+        enabled: false,         // cannot set by setNetInfo(). should use enable()
+        joinTime: null,         // POSIX Time, seconds since 1/1/1970, assigned by freebird@register
+        timestamp: null,        // POSIX Time, seconds, fb should call dev._poke() to update it
+        traffic: {              // only report@traffic reset
+            in: { hits: 0, bytes: 0 },
+            out: { hits: 0, bytes: 0 }
+        },
+        role: '',
+        parent: '0',            // permanent address, default is '0' for netcore
+        maySleep: false,        // developer tells
+        sleepPeriod: 30,        // developer tells, seconds
+        status: 'unknown',      // online, offline, sleep, unknown
+        address: {
+            permanent: '',
+            dynamic: ''
+        }
+    };
+
+    this._props = {
+        name: undefined,        // client user set at will
+        description: undefined, // client user set at will
+        location: undefined     // client user set at will
+    };
+
+    this._attrs = {
+        manufacturer: undefined,
+        model: undefined,
+        serial: undefined,
+        version: {
+            hw: undefined,
+            sw: undefined,
+            fw: undefined
+        },
+        power: {
+            type: undefined,
+            voltage: undefined
+        }
+    };
+
+    this.extra = null;          // developer sets at will
+}

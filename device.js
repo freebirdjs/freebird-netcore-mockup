@@ -140,4 +140,7 @@ function generateRsource(ridStr, spec) {
     return rsc;
 }
 
+// var mydev = new Device();
+// console.log(util.inspect(mydev, { depth: null }));
+
 module.exports = Device;

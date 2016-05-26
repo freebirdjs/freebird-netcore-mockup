@@ -8,6 +8,7 @@ var MockDevice = require('./device'),
 
 // CONSTANTS
 var EVTS = {
+    SYS_READY: 'SYS_READY',
     DEV_INCOMING: 'DEV_INCOMING',
     DEV_LEAVING: 'DEV_LEAVING',
     DEV_REPORTING: 'DEV_REPORTING',
@@ -127,13 +128,16 @@ controller._gadAttrRandomChanges = function (dev) {
     pickedRid = Array.isArray(pickedRid) ? pickedRid[0] : pickedRid;
 
     var rdef = lwm2mId.getRdef(pickedOid, pickedRid);
-    pickedInst[pickedRid] = rdm.getRandomByType(rdef.type);
+    if (rdef.access !== 'E') {
+        pickedInst[pickedRid] = rdm.getRandomByType(rdef.type);
 
-    gadChanges.oid = pickedOid;
-    gadChanges.rid = pickedRid;
-    gadChanges.data = pickedInst[pickedRid];
+        gadChanges.oid = pickedOid;
+        gadChanges.rid = pickedRid;
+        gadChanges.data = pickedInst[pickedRid];
 
-    controller.emit(EVTS.GAD_REPORTING, gadChanges);
+        controller.emit(EVTS.GAD_REPORTING, gadChanges);
+    }
+
 
 };
 
@@ -217,6 +221,7 @@ controller.stopEmitGadChanges = function () {
         controller.gadReportFirer = null;
     }
 };
+
 /*************************************************************************************************/
 /*** Public: Drivers                                                                           ***/
 /*************************************************************************************************/
@@ -225,6 +230,7 @@ controller.start = function (cb) {
     controller.startEmitDevChanges();
     controller.startEmitDevLeaving();
     controller.startEmiGadChanges();
+    controller.emit('SYS_READY');
     if (cb)
         cb(null, true);
 };
@@ -241,6 +247,13 @@ controller.stop = function (cb) {
 controller.reset = function (mode, cb) {
     if (cb)
         cb(null, true);
+
+    controller.stop(function () {
+        controller.start(function () {
+            // start again
+        });
+    });
+
 };
 
 controller.permitJoin = function (duration, cb) {
@@ -307,33 +320,5 @@ controller.getReportCfg = function (permAddr, auxId, attrName, cb) {
     if (cb)
         cb(null, 'getReportCfg_' + permAddr + '_' + auxId + '_' + attrName);
 };
-
-controller.on(EVTS.DEV_INCOMING, function (dev) {
-    // console.log('** DEV INCOMING **');
-    // console.log(dev.clientId);
-    // console.log(controller.devbox.length);
-});
-
-controller.on(EVTS.DEV_REPORTING, function (devChanges) {
-    // console.log('** DEV ATTR CHANGES **');
-    // console.log(devChanges.dev.clientId);
-    // console.log(devChanges.data);
-});
-
-controller.on(EVTS.GAD_REPORTING, function (gadChanges) {
-    console.log('>>>>>>> GAD ATTR CHANGES');
-    console.log(gadChanges.oid);
-    console.log(gadChanges.iid);
-    console.log(gadChanges.rid);
-    console.log(gadChanges.data);
-});
-
-
-controller.on(EVTS.DEV_LEAVING, function (dev) {
-    // console.log('** DEV LEAVING **');
-    // console.log(dev.clientId);
-});
-
-controller.start();
 
 module.exports = controller;
