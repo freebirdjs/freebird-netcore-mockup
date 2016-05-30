@@ -1,6 +1,6 @@
 {
   "name": "freebird-netcore-mockup",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A mock netcore for freebird testing",
   "main": "index.js",
   "scripts": {

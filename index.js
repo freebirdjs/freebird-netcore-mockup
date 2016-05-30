@@ -83,7 +83,7 @@ nc.cookRawDev = function (dev, rawDev, cb) {
 
     dev.extra = rawDev;
 
-    cb(err, dev);
+    cb(null, dev);
 };
 
 nc.cookRawGad = function (gad, rawGad, cb) {
