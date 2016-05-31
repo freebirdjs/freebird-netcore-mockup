@@ -105,10 +105,8 @@ nc.cookRawGad = function (gad, rawGad, cb) {
 
 controller.on('SYS_READY', function () {
     console.log('** SYS READY **');
-    console.log(nc.isEnabled());
-    nc.enable();
-    console.log(nc.isEnabled());
-    nc.commitReady();
+    // nc.enable();
+    nc.commitReady();   // nc.enable() inside netcore
 });
 
 controller.on('DEV_INCOMING', function (dev) {
