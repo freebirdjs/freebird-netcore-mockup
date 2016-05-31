@@ -105,7 +105,6 @@ nc.cookRawGad = function (gad, rawGad, cb) {
 
 controller.on('SYS_READY', function () {
     console.log('** SYS READY **');
-    // nc.enable();
     nc.commitReady();   // nc.enable() inside netcore
 });
 
@@ -197,34 +196,34 @@ function getGadClass(gadId) {
     });
 }
 
-fakeFb.on('_nc:devIncoming', function (msg) {
-    // console.log('>>>>> DEV INCOMING <<<<<<<<');
-    // console.log(msg.permAddr);
-});
+// fakeFb.on('_nc:devIncoming', function (msg) {
+//     // console.log('>>>>> DEV INCOMING <<<<<<<<');
+//     // console.log(msg.permAddr);
+// });
 
-fakeFb.on('_nc:devLeaving', function (msg) {
-    // console.log('>>>>> DEV LEAVING <<<<<<<<');
-    // console.log(msg.permAddr);
-});
+// fakeFb.on('_nc:devLeaving', function (msg) {
+//     // console.log('>>>>> DEV LEAVING <<<<<<<<');
+//     // console.log(msg.permAddr);
+// });
 
-fakeFb.on('_nc:gadIncoming', function (msg) {
-    // console.log('>>>>> GAD INCOMING <<<<<<<<');
-    // console.log(msg.permAddr + ':' + msg.auxId);
-});
+// fakeFb.on('_nc:gadIncoming', function (msg) {
+//     // console.log('>>>>> GAD INCOMING <<<<<<<<');
+//     // console.log(msg.permAddr + ':' + msg.auxId);
+// });
 
-fakeFb.on('_nc:gadReporting', function (msg) {
-    // console.log('>>>>> GAD REPORTING <<<<<<<<');
-    // console.log(msg.permAddr + ':' + msg.auxId);
-    // console.log(msg.data);
-    // console.log(' ');
-});
+// fakeFb.on('_nc:gadReporting', function (msg) {
+//     // console.log('>>>>> GAD REPORTING <<<<<<<<');
+//     // console.log(msg.permAddr + ':' + msg.auxId);
+//     // console.log(msg.data);
+//     // console.log(' ');
+// });
 
-fakeFb.on('_nc:devReporting', function (msg) {
-    // console.log('>>>>> DEV REPORTING <<<<<<<<');
-    // console.log(msg.permAddr);
-    // console.log(msg.data);
-    // console.log(' ');
-});
+// fakeFb.on('_nc:devReporting', function (msg) {
+//     // console.log('>>>>> DEV REPORTING <<<<<<<<');
+//     // console.log(msg.permAddr);
+//     // console.log(msg.data);
+//     // console.log(' ');
+// });
 
 
 // nc.start();

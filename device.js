@@ -136,7 +136,11 @@ function generateRsource(ridStr, spec) {
     var val = rdm.getRandomByType(spec.type),
         rsc = {};
 
-    rsc[ridStr] = val;
+    if (spec.access === 'E')
+        rsc[ridStr] = '_exec_';
+    else
+        rsc[ridStr] = val;
+
     return rsc;
 }
 

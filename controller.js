@@ -45,7 +45,7 @@ controller._newDevice = function () {
 
     if (this._hasDevice(dev.clientId)) {
         return this._newDevice();
-    } else if (this.devbox.length < 100) {
+    } else if (this.devbox.length < 20) {
         this.devbox.push(dev);
         this.emit(EVTS.DEV_INCOMING, dev);
         return dev;
