@@ -136,8 +136,9 @@ controller.on('DEV_REPORTING', function (devChanges) {
     var dev = devChanges.dev,
         attrs = {};
     // devChanges: { dev, data }
-    if (devChanges.data.hasOwnProperty('ip'))
-        attrs.ip = devChanges.data.ip;
+    if (devChanges.data.hasOwnProperty('ip')) {
+        nc.commitDevNetChanging(dev.mac, { address: { dynamic: devChanges.data.ip } });
+    }
 
     if (Object.keys(attrs).length) 
         nc.commitDevReporting(dev.mac, attrs);
