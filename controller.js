@@ -4,6 +4,7 @@ var chance = new require('chance')(),
     lwm2mId = require('lwm2m-id');
 
 var MockDevice = require('./device'),
+    devMocks = require('./dev_mocks'),
     rdm = require('./random_provider.js');
 
 // CONSTANTS
@@ -42,6 +43,13 @@ controller._pickDevice = function () {
 
 controller._newDevice = function () {
     var dev = new MockDevice();
+
+    if (devMocks.length) {
+        var devMock = devMocks.shift();
+
+        if (devMock)
+            dev.recover(devMock);
+    }
 
     if (this._hasDevice(dev.clientId)) {
         return this._newDevice();
@@ -85,6 +93,7 @@ controller._devAttrRandomChanges = function (dev) {
     picked.forEach(function (attr) {
         if (attr === 'ip') {
             dev.ip = chance.ip();
+            dev.so.connMonitor[0].ip = dev.ip;
             devChanges.data.ip = dev.ip;
         } else if (attr === 'version') {
             dev.version = rdm.randomVersion();
@@ -137,8 +146,6 @@ controller._gadAttrRandomChanges = function (dev) {
 
         controller.emit(EVTS.GAD_REPORTING, gadChanges);
     }
-
-
 };
 
 /*************************************************************************************************/

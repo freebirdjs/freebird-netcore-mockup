@@ -4,10 +4,6 @@ var lwm2mId = require('lwm2m-id'),
     controller = require('./controller.js');
 
 var EventEmitter = require('events');
-var fakeFb = {};
-Object.assign(fakeFb, EventEmitter.prototype);
-Object.assign(fakeFb, new EventEmitter());
-
 var validGads = [ 'dIn', 'dOut', 'aIn', 'aOut', 'generic', 'illuminance', 'presence',
                   'temperature', 'humidity', 'pwrMea', 'actuation', 'setPoint', 'loadCtrl',
                   'lightCtrl', 'pwrCtrl', 'accelerometer', 'magnetometer', 'barometer' ];
@@ -46,8 +42,6 @@ var nc = new Netcore('mock', controller, {
     phy: 'test_phy',
     nwk: 'test_nwk'
 });
-
-nc._fb = fakeFb;
 
 nc.registerNetDrivers(netDrivers);
 nc.registerDevDrivers(devDrivers);
@@ -195,37 +189,5 @@ function getGadClass(gadId) {
         return (gadId === vldGadId);
     });
 }
-
-// fakeFb.on('_nc:devIncoming', function (msg) {
-//     // console.log('>>>>> DEV INCOMING <<<<<<<<');
-//     // console.log(msg.permAddr);
-// });
-
-// fakeFb.on('_nc:devLeaving', function (msg) {
-//     // console.log('>>>>> DEV LEAVING <<<<<<<<');
-//     // console.log(msg.permAddr);
-// });
-
-// fakeFb.on('_nc:gadIncoming', function (msg) {
-//     // console.log('>>>>> GAD INCOMING <<<<<<<<');
-//     // console.log(msg.permAddr + ':' + msg.auxId);
-// });
-
-// fakeFb.on('_nc:gadReporting', function (msg) {
-//     // console.log('>>>>> GAD REPORTING <<<<<<<<');
-//     // console.log(msg.permAddr + ':' + msg.auxId);
-//     // console.log(msg.data);
-//     // console.log(' ');
-// });
-
-// fakeFb.on('_nc:devReporting', function (msg) {
-//     // console.log('>>>>> DEV REPORTING <<<<<<<<');
-//     // console.log(msg.permAddr);
-//     // console.log(msg.data);
-//     // console.log(' ');
-// });
-
-
-// nc.start();
 
 module.exports = nc;

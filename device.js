@@ -76,6 +76,19 @@ function Device() {
     });
 }
 
+Device.prototype.recover = function (devInfo) {
+    this.clientId = devInfo.clientId;
+    this.lifetime = devInfo.lifetime;
+    this.joinTime = devInfo.joinTime;
+    this.ip = devInfo.ip ;
+    this.mac = devInfo.mac;
+    this.version = devInfo.version;
+    this.objList = devInfo.objList;
+    this.so = devInfo.so;
+
+    return this;
+};
+
 /*************************************************************************************************/
 /*** Private                                                                                   ***/
 /*************************************************************************************************/
