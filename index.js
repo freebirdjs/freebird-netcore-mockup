@@ -89,7 +89,7 @@ nc.cookRawGad = function (gad, rawGad, cb) {
     } else {
         gad.setPanelInfo({
             profile: 'none',
-            class: gadClass
+            classId: gadClass
         });
 
         gad.setAttrs(rawGad[gadId]);
