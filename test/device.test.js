@@ -2,7 +2,7 @@ var util = require('util');
 
 var expect = require('chai').expect,
     assert = require('chai').assert,
-    Device = require('../device.js');
+    Device = require('../lib/device.js');
 
 describe('Device Contructor', function() {
     var dev = new Device();

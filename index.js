@@ -1,12 +1,17 @@
 var lwm2mId = require('lwm2m-id'),
     FreebirdBase = require('freebird-base'),
     Netcore = FreebirdBase.Netcore,
-    controller = require('./controller.js');
+    controller = require('./lib/controller.js');
 
 var EventEmitter = require('events');
-var validGads = [ 'dIn', 'dOut', 'aIn', 'aOut', 'generic', 'illuminance', 'presence',
-                  'temperature', 'humidity', 'pwrMea', 'actuation', 'setPoint', 'loadCtrl',
-                  'lightCtrl', 'pwrCtrl', 'accelerometer', 'magnetometer', 'barometer' ];
+var validGads = [
+    'dIn', 'dOut', 'aIn', 'aOut', 'generic', 'illuminance', 'presence', 'temperature', 'humidity', 'pwrMea',
+    'actuation', 'setPoint', 'loadCtrl', 'lightCtrl', 'pwrCtrl', 'accelerometer', 'magnetometer', 'barometer',
+    'voltage', 'current', 'frequency', 'depth', 'percentage', 'altitude', 'load', 'pressure', 'loudness',
+    'concentration', 'acidity', 'conductivity', 'power', 'powerFactor', 'distance', 'energy', 'direction',
+    'time', 'gyrometer', 'colour', 'gpsLocation', 'positioner', 'buzzer', 'audioClip', 'timer', 'addressableTextDisplay',
+    'onOffSwitch', 'levelControl', 'upDownControl', 'multipleAxisJoystick', 'rate', 'pushButton', 'multistateSelector'
+];
 /***********************************************************************/
 /*** Drivers                                                         ***/
 /***********************************************************************/
@@ -14,25 +19,25 @@ var netDrivers = {
     start: controller.start,            // function(callback) {}, callback(err)
     stop: controller.stop,              // function(callback) {}, callback(err)
     reset: controller.reset,            // function(mode, callback) {}, callback(err)
-    permitJoin: controller.permitJoin,  // function(duration, callback) {}, callback(err, result), result: timeLeft (Number, ex: 180)
-    remove: controller.remove,          // function(permAddr, callback) {}, callback(err, result), result: permAddr (String, ex: '0x12345678')
-    ban: controller.ban,                // function(permAddr, callback) {}, callback(err, result), result: permAddr (String, ex: '0x12345678')
-    unban: controller.unban,            // function(permAddr, callback) {}, callback(err, result), result: permAddr (String, ex: '0x12345678')
-    ping: controller.ping               // function(permAddr, callback) {}, callback(err, result), result: timeInMs (Number, ex: 16)
+    permitJoin: controller.permitJoin,  // function(duration, callback) {}, callback(err, timeLeft) (Number, ex: 180)
+    remove: controller.remove,          // function(permAddr, callback) {}, callback(err, permAddr) (String, ex: '0x12345678')
+    ban: controller.ban,                // function(permAddr, callback) {}, callback(err, permAddr) (String, ex: '0x12345678')
+    unban: controller.unban,            // function(permAddr, callback) {}, callback(err, permAddr) (String, ex: '0x12345678')
+    ping: controller.ping               // function(permAddr, callback) {}, callback(err, time)     (Number, ex: 16)
 };
 
 var devDrivers = {
-    read: controller.devRead,           // function(permAddr, attr, callback) {},       callback(err, result), result: value read (Type denpends, ex: 'hello', 12, false)
-    write: controller.devWrite,         // function(permAddr, attr, val, callback) {},  callback(err, result), result: value written (optional, Type denpends, ex: 'hello', 12, false)
+    read: controller.devRead,           // function(permAddr, attr, callback) {},       callback(err, val)  (Type denpends, ex: 'hello', 12, false)
+    write: controller.devWrite,         // function(permAddr, attr, val, callback) {},  callback(err, val)  (optional, Type denpends, ex: 'hello', 12, false)
     identify: controller.devIdentify,   // function(permAddr, callback) {},             callback(err)
 };
 
 var gadDrivers = {
-    read: controller.gadRead,               // function(permAddr, auxId, attr, callback) {},          callback(err, result), result: value read (Type denpends, ex: 'hello', 12, false)
-    write: controller.gadWrite,             // function(permAddr, auxId, attr, val, callback) {},     callback(err, result), result: value written (optional, Type denpends, ex: 'hello', 12, false)
-    exec: controller.gadExec,               // function(permAddr, auxId, attr, args, callback) {},    callback(err, result), result: can be anything, depends on firmware implementation
-    setReportCfg: controller.setReportCfg,  // function(permAddr, auxId, attrName, cfg, callback) {}, callback(err, result), result: set succeeds? (Boolean, true or false)
-    getReportCfg: controller.getReportCfg,  // function(permAddr, auxId, attrName, callback) {},      callback(err, result), result: config object (Object, ex: { pmin: 10, pmax: 60, gt: 200 })
+    read: controller.gadRead,               // function(permAddr, auxId, attr, callback) {},          callback(err, val)    (Type denpends, ex: 'hello', 12, false)
+    write: controller.gadWrite,             // function(permAddr, auxId, attr, val, callback) {},     callback(err, val)    (optional, Type denpends, ex: 'hello', 12, false)
+    exec: controller.gadExec,               // function(permAddr, auxId, attr, args, callback) {},    callback(err, result) (can be anything, depends on firmware implementation)
+    setReportCfg: controller.setReportCfg,  // function(permAddr, auxId, attrName, cfg, callback) {}, callback(err, result) (set succeeds? (Boolean, true or false))
+    getReportCfg: controller.getReportCfg,  // function(permAddr, auxId, attrName, callback) {},      callback(err, cfg)    (Object, ex: { pmin: 10, pmax: 60, gt: 200 })
 };
 
 /***********************************************************************/
@@ -77,7 +82,9 @@ nc.cookRawDev = function (dev, rawDev, cb) {
 
     dev.extra = rawDev;
 
-    cb(null, dev);
+    process.nextTick(function () {
+        cb(null, dev);
+    });
 };
 
 nc.cookRawGad = function (gad, rawGad, cb) {
@@ -85,7 +92,9 @@ nc.cookRawGad = function (gad, rawGad, cb) {
         gadClass = getGadClass(gadId);
 
     if (!gadClass) {
-        cb(new Error('No matched gadget'));
+        process.nextTick(function () {
+            cb(new Error('No matched gadget'));
+        });
     } else {
         gad.setPanelInfo({
             profile: 'none',
@@ -93,7 +102,9 @@ nc.cookRawGad = function (gad, rawGad, cb) {
         });
 
         gad.setAttrs(rawGad[gadId]);
-        cb(null, gad);
+        process.nextTick(function () {
+            cb(null, gad);
+        });
     }
 };
 
