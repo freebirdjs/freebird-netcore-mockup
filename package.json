@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "chance": "^1.0.3",
-    "freebird-base": "^0.2.7",
-    "lwm2m-id": "^1.5.0"
+    "freebird-base": "^0.4.0",
+    "lwm2m-id": "^1.6.1"
   }
 }
