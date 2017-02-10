@@ -12,7 +12,7 @@ var validGads = [
     'onOffSwitch', 'levelControl', 'upDownControl', 'multipleAxisJoystick', 'rate', 'pushButton', 'multistateSelector'
 ];
 
-function newMockup(cancelStartEmit) {
+function newMockup(ncName, cancelStartEmit) {
     var controller = new Controller(cancelStartEmit);
 
 /***********************************************************************/
@@ -46,7 +46,7 @@ function newMockup(cancelStartEmit) {
 /***********************************************************************/
 /*** Start Building Netcore                                          ***/
 /***********************************************************************/
-    var nc = FreebirdBase.createNetcore('mock', controller, {
+    var nc = FreebirdBase.createNetcore(ncName, controller, {
         phy: 'test_phy',
         nwk: 'test_nwk'
     });
