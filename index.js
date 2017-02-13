@@ -19,28 +19,28 @@ function newMockup(ncName, cancelStartEmit) {
 /*** Drivers                                                         ***/
 /***********************************************************************/
     var netDrivers = {
-        start: controller.start,            // function(done) {}, done(err)
-        stop: controller.stop,              // function(done) {}, done(err)
-        reset: controller.reset,            // function(mode, done) {}, done(err)
-        permitJoin: controller.permitJoin,  // function(duration, done) {}, done(err, timeLeft) (Number, ex: 180)
-        remove: controller.remove,          // function(permAddr, done) {}, done(err, permAddr) (String, ex: '0x12345678')
-        ban: controller.ban,                // function(permAddr, done) {}, done(err, permAddr) (String, ex: '0x12345678')
-        unban: controller.unban,            // function(permAddr, done) {}, done(err, permAddr) (String, ex: '0x12345678')
-        ping: controller.ping               // function(permAddr, done) {}, done(err, time)     (Number, ex: 16)
+        start: controller.start.bind(controller),            // function(done) {}, done(err)
+        stop: controller.stop.bind(controller),              // function(done) {}, done(err)
+        reset: controller.reset.bind(controller),            // function(mode, done) {}, done(err)
+        permitJoin: controller.permitJoin.bind(controller),  // function(duration, done) {}, done(err, timeLeft) (Number, ex: 180)
+        remove: controller.remove.bind(controller),          // function(permAddr, done) {}, done(err, permAddr) (String, ex: '0x12345678')
+        ban: controller.ban.bind(controller),                // function(permAddr, done) {}, done(err, permAddr) (String, ex: '0x12345678')
+        unban: controller.unban.bind(controller),            // function(permAddr, done) {}, done(err, permAddr) (String, ex: '0x12345678')
+        ping: controller.ping.bind(controller)               // function(permAddr, done) {}, done(err, time)     (Number, ex: 16)
     };
 
     var devDrivers = {
-        read: controller.devRead,           // function(permAddr, attr, done) {},       done(err, val)  (Type denpends, ex: 'hello', 12, false)
-        write: controller.devWrite,         // function(permAddr, attr, val, done) {},  done(err, val)  (optional, Type denpends, ex: 'hello', 12, false)
-        identify: controller.devIdentify,   // function(permAddr, done) {},             done(err)
+        read: controller.devRead.bind(controller),           // function(permAddr, attr, done) {},       done(err, val)  (Type denpends, ex: 'hello', 12, false)
+        write: controller.devWrite.bind(controller),         // function(permAddr, attr, val, done) {},  done(err, val)  (optional, Type denpends, ex: 'hello', 12, false)
+        identify: controller.devIdentify.bind(controller),   // function(permAddr, done) {},             done(err)
     };
 
     var gadDrivers = {
-        read: controller.gadRead,                   // function(permAddr, auxId, attr, done) {},          done(err, val)    (Type denpends, ex: 'hello', 12, false)
-        write: controller.gadWrite,                 // function(permAddr, auxId, attr, val, done) {},     done(err, val)    (optional, Type denpends, ex: 'hello', 12, false)
-        exec: controller.gadExec,                   // function(permAddr, auxId, attr, args, done) {},    done(err, result) (can be anything, depends on firmware implementation)
-        writeReportCfg: controller.writeReportCfg,  // function(permAddr, auxId, attrName, cfg, done) {}, done(err, result) (set succeeds? (Boolean, true or false))
-        readReportCfg: controller.readReportCfg,    // function(permAddr, auxId, attrName, done) {},      done(err, cfg)    (Object, ex: { pmin: 10, pmax: 60, gt: 200 })
+        read: controller.gadRead.bind(controller),                   // function(permAddr, auxId, attr, done) {},          done(err, val)    (Type denpends, ex: 'hello', 12, false)
+        write: controller.gadWrite.bind(controller),                 // function(permAddr, auxId, attr, val, done) {},     done(err, val)    (optional, Type denpends, ex: 'hello', 12, false)
+        exec: controller.gadExec.bind(controller),                   // function(permAddr, auxId, attr, args, done) {},    done(err, result) (can be anything, depends on firmware implementation)
+        writeReportCfg: controller.writeReportCfg.bind(controller),  // function(permAddr, auxId, attrName, cfg, done) {}, done(err, result) (set succeeds? (Boolean, true or false))
+        readReportCfg: controller.readReportCfg.bind(controller),    // function(permAddr, auxId, attrName, done) {},      done(err, cfg)    (Object, ex: { pmin: 10, pmax: 60, gt: 200 })
     };
 
 /***********************************************************************/
