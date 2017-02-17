@@ -1,6 +1,6 @@
 {
   "name": "freebird-netcore-mockup",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "A mock netcore for freebird testing",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "chance": "^1.0.3",
-    "freebird-base": "^0.4.1",
+    "freebird-base": "^0.4.5",
     "lwm2m-id": "^1.6.1"
   }
 }
